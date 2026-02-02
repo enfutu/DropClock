@@ -94,7 +94,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _HandEmissionPow: 2.3600507
+    - _HandEmissionPow: 0
     - _HandScale: 0.16
     - _LightShiftX: -0.28
     - _LightShiftY: 0.64
@@ -115,14 +115,14 @@ Material:
     - _UVSec: 0
     - _UseDirectionalLight: 0
     - _UseUIAlphaClip: 0
-    - _WaterEmissionPow: 1.4690402
+    - _WaterEmissionPow: 0
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 0.8207547, g: 0.375534, b: 0.375534, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _HandsColor: {r: 0.9607843, g: 0.8509804, b: 0.32156864, a: 1}
+    - _HandsColor: {r: 0, g: 0, b: 0, a: 0}
     - _HighlightColor: {r: 0.7264151, g: 0.7264151, b: 0.7264151, a: 1}
     - _Pos: {r: 0, g: 0, b: 0, a: 0}
-    - _WaterColor: {r: 0.18039216, g: 0.5019608, b: 0.7411765, a: 1}
+    - _WaterColor: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
