@@ -15,14 +15,17 @@ namespace enfutu.UdonScript
 
         void Start()
         {
-            Grass1();
-            Square();
+            Grass2();
+            Circle();
             Water0();
             WaterEm();
             Hand0();
             HandEm();
             Font1();
             ScaleChange();
+            WallChange();
+            PosterToggle();
+            MirrorToggle();
         }
 
         //TestPlay----------------------------------------------------------
@@ -119,5 +122,25 @@ namespace enfutu.UdonScript
             dropClock.localScale = Vector3.one * Mathf.Lerp(.2f, 2f, _scaleSlider.value);
         }
 
+        //material
+        int _wallNum = 0;
+        [SerializeField] Material[] _wallMat;
+        [SerializeField] MeshRenderer _wall;
+        public void WallChange() 
+        {
+            _wall.material = _wallMat[_wallNum];
+            _wallNum++;
+            if((_wallMat.Length - 1) < _wallNum) { _wallNum = 0; }
+        }
+
+        //poster
+        bool _posterEnable = true;
+        [SerializeField] GameObject _poster;
+        public void PosterToggle() { _posterEnable = !_posterEnable; _poster.SetActive(_posterEnable); }
+
+        //mirror
+        bool _mirrorEnable = true;
+        [SerializeField] GameObject _mirror;
+        public void MirrorToggle() { _mirrorEnable = !_mirrorEnable; _mirror.SetActive(_mirrorEnable); }
     }
 }
