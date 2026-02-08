@@ -83,8 +83,6 @@ Shader "enfutu/font_"
 
 		_CullMode			("Cull Mode", Float) = 0
 		_ColorMask			("Color Mask", Float) = 15
-
-		_RT ("RT", 2D) =  "black" {}
 	}
 
     SubShader
@@ -136,7 +134,7 @@ Shader "enfutu/font_"
 				float4 color : COLOR;
             };
 
-            sampler2D _MainTex, _RT;
+            sampler2D _MainTex;
 			float _OutlineWidth, _ScaleX, _ScaleY, _PerspectiveFilter;
             float4 _MainTex_ST, _FaceColor, _OutlineColor;
 			float4 _UdonSelectValue;

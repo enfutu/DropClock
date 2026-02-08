@@ -74,7 +74,7 @@ Shader "enfutu/Blit"
                     float _now = lerp(nowDurationTime, _UdonPlateValue[i].w, isLeft);   //‘ŞºÏ‚İ‚È‚çŒo‰ßŠÔ‚ğ‘Şº‚Ì‚à‚Ì‚ÉŒÅ’è‚µ…“H‚ÌŠg‘å‚ğ–h‚®
                     
                     float r = .8;
-                    r += .00004 * (_now - platesDurationTime);  //.00001‚¾‚Æ6ŠÔ‚Å”¼•ª‚­‚ç‚¢‚¾‚Á‚½
+                    r += .00002 * (_now - platesDurationTime);  //.00001‚¾‚Æ6ŠÔ‚Å”¼•ª‚­‚ç‚¢‚¾‚Á‚½
                     r = min(1.5f, r);
                     r = lerp(platesDurationTime, r, isActive);
                     

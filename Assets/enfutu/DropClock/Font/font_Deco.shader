@@ -85,7 +85,6 @@ Shader "enfutu/font_Deco"
 		_ColorMask			("Color Mask", Float) = 15
 
 		_LUT ("LUT", 2D) = "black" {}
-		_RT ("RT", 2D) =  "black" {}
 	}
 
     SubShader
@@ -145,7 +144,7 @@ Shader "enfutu/font_Deco"
 				float4 color : COLOR;
             };
 
-            sampler2D _MainTex, _LUT, _RT;
+            sampler2D _MainTex, _LUT;
 			float _ScaleX, _ScaleY, _PerspectiveFilter;
             float4 _MainTex_ST, _FaceColor;
 			float4 _UdonFontValue;	//x:power, y:•¶š”, zw:‚È‚µ
@@ -201,7 +200,7 @@ Shader "enfutu/font_Deco"
 				
 				float _now = lerp(_UdonSelectValue.z, _UdonPlateValue[selectNum].w, isLeft);	//‘ŞºÏ‚İ‚È‚çŒÅ’èBBlitShader‚É‡‚í‚¹‚Ä‚éB
 				float platesDurationTime = _UdonPlateValue[selectNum].z;
-				float a = .00004 * (_now - platesDurationTime); //.00001‚¾‚Æ6ŠÔ‚Å”¼•ª‚­‚ç‚¢‚¾‚Á‚½
+				float a = .00002 * (_now - platesDurationTime); //.00001‚¾‚Æ6ŠÔ‚Å”¼•ª‚­‚ç‚¢‚¾‚Á‚½
                 a = min(1.5f, a);
 
 				float2 vec = tex.rg * (.1 + a * .05);

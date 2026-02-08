@@ -185,7 +185,7 @@ Shader "enfutu/plate"
                 float dD = tex2D(_RT, st - float2(0, px)).r;
 
                 float2 grad = float2(dR - dL, dU - dD);
-                float2 ng = normalize(grad + 1e-8);
+                float2 ng = normalize(grad + 1e-8) * .5;
                 ng = lerp(0, ng, shape);
 
                 //‘å‚«‚³‚Ì’²®

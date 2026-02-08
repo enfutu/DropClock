@@ -85,7 +85,6 @@ Shader "enfutu/font_Active"
 		_ColorMask			("Color Mask", Float) = 15
 
 		_LUT ("LUT", 2D) = "black" {}
-		_RT ("RT", 2D) =  "black" {}
 	}
 
     SubShader
@@ -145,7 +144,7 @@ Shader "enfutu/font_Active"
 				float4 color : COLOR;
             };
 
-            sampler2D _MainTex, _LUT, _RT;
+            sampler2D _MainTex, _LUT;
 			float _OutlineWidth, _ScaleX, _ScaleY, _PerspectiveFilter;
             float4 _MainTex_ST, _FaceColor, _OutlineColor;
 			float4 _UdonFontValue;	//x:power, y:ï∂éöêî, zw:Ç»Çµ

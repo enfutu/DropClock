@@ -8,8 +8,7 @@ ShaderImporter:
   - _BumpMap: {instanceID: 0}
   - _Cube: {instanceID: 0}
   - _MainTex: {instanceID: 0}
-  - _AddTexture: {instanceID: 0}
-  - _Map: {instanceID: 0}
+  - _LUT: {instanceID: 0}
   nonModifiableTextures: []
   userData: 
   assetBundleName: 
