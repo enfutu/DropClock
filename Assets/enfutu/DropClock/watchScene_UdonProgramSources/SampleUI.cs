@@ -15,13 +15,12 @@ namespace enfutu.UdonScript
 
         void Start()
         {
-            Grass2();
-            Circle();
+            Front0();
             Water0();
             WaterEm();
             Hand0();
             HandEm();
-            Font1();
+            Font0();
             ScaleChange();
             WallChange();
             PosterToggle();
@@ -40,21 +39,58 @@ namespace enfutu.UdonScript
             _sc.TestPlayEnter(_useCount);
         }
 
-        //GlassColor----------------------------------------------------------
-        [SerializeField] MeshRenderer[] Glass;
-        [SerializeField] Material[] GlassMaterial;
-        public void Grass1() { setGlassMaterial(0); }
-        public void Grass2() { setGlassMaterial(1); }
-        public void Grass3() { setGlassMaterial(2); }
-        public void Grass4() { setGlassMaterial(3); }
-        public void Grass5() { setGlassMaterial(4); }
-        private void setGlassMaterial(int num)
+        //FrontColor----------------------------------------------------------
+        [SerializeField] MeshRenderer _front;
+        [SerializeField] Material[] _fmat;
+        bool em = true;
+        public void Front0() { setFrontMaterial(0); }
+        public void Front1() { setFrontMaterial(1); }
+        public void Front2() { setFrontMaterial(2); }
+        public void Front3()
         {
-            for(int i = 0; i < Glass.Length; i++)
+            em = !em;
+            for (int i = 0; i < _fmat.Length; i++)
             {
-                Glass[i].material = GlassMaterial[num];
+                if (em) { _fmat[i].EnableKeyword("_EMISSION"); }
+                else { _fmat[i].DisableKeyword("_EMISSION"); }
             }
         }
+        public void Front4() { _front.enabled = false; }
+        private void setFrontMaterial(int num)
+        {
+            _front.enabled = true;
+            _front.material = _fmat[num];
+        }
+
+        //BackColor----------------------------------------------------------
+        [SerializeField] MeshRenderer _back;
+        [SerializeField] Material[] _bmat;
+        public void Back0() { setBackMaterial(0); }
+        public void Back1() { setBackMaterial(1); }
+        public void Back2() { setBackMaterial(2); }
+        public void Back3() { setBackMaterial(3); }
+        public void Back4() { _back.enabled = false; }
+        private void setBackMaterial(int num)
+        {
+            _back.enabled = true;
+            _back.material = _bmat[num];
+        }
+
+        //FrameColor----------------------------------------------------------
+        [SerializeField] MeshRenderer _frame;
+        [SerializeField] Material[] _frmat;
+        public void Frame0() { setFrameMaterial(0); }
+        public void Frame1() { setFrameMaterial(1); }
+        public void Frame2() { setFrameMaterial(2); }
+        public void Frame3() { setFrameMaterial(3); }
+        public void Frame4() { _frame.enabled = false; }
+        private void setFrameMaterial(int num)
+        {
+            _frame.enabled = true;
+            _frame.material = _frmat[num];
+        }
+
+
 
         //Shape----------------------------------------------------------
         [SerializeField] GameObject[] models;
