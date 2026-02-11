@@ -1,7 +1,8 @@
 Shader "enfutu/plate"
 {
     Properties
-    {      
+    {   
+        _Exactly ("(test)Exactly", range(0,1)) = 0
         _BaseColor ("BaseColor", Color) = (0,0,0,0)
         _WaterColor ("WaterColor", Color) = (0,0,0,0)
         _HighlightColor ("HighlightColor", Color) = (0,0,0,0)
@@ -72,7 +73,7 @@ Shader "enfutu/plate"
 
             sampler2D _MainTex, _RT, _enWatchGrabTex;
             float4 _MainTex_ST, _WaterColor, _HighlightColor, _BaseColor, _HandsColor;
-            float _HandScale, _WaterEmissionPow, _HandEmissionPow, _LightShiftX, _LightShiftY;
+            float _HandScale, _WaterEmissionPow, _HandEmissionPow, _LightShiftX, _LightShiftY, _Exactly;
             float4 _UdonSelectValue;
             int _UseDirectionalLight;
 
@@ -137,7 +138,13 @@ Shader "enfutu/plate"
 
                 clip(_HandRot.w - .5);
 
-                float2 st = i.uv;
+                float amplitude = (1 - abs(i.uv.x - _Exactly) * 2);
+                float time = _Time.y + i.uv.x * 3 * amplitude;
+                time = sin(time * 6) * .01;
+                float2 waveOffset = float2(0, time) * amplitude;
+                waveOffset *= sin(_Exactly * 2);
+
+                float2 st = i.uv + waveOffset;
 
                 float3 lightDir = i.localLightDir;
 

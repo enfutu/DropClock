@@ -16,6 +16,8 @@ namespace enfutu.UdonScript
         void Start()
         {
             Front0();
+            Frame2();
+            Back0();
             Water0();
             WaterEm();
             Hand0();
@@ -41,6 +43,7 @@ namespace enfutu.UdonScript
 
         //FrontColor----------------------------------------------------------
         [SerializeField] MeshRenderer _front;
+        [SerializeField] Vector4[] _emissionColor;
         [SerializeField] Material[] _fmat;
         bool em = true;
         public void Front0() { setFrontMaterial(0); }
@@ -51,8 +54,8 @@ namespace enfutu.UdonScript
             em = !em;
             for (int i = 0; i < _fmat.Length; i++)
             {
-                if (em) { _fmat[i].EnableKeyword("_EMISSION"); }
-                else { _fmat[i].DisableKeyword("_EMISSION"); }
+                if (em) { _fmat[i].SetVector("_EmissionColor", _emissionColor[i]); }
+                else { _fmat[i].SetVector("_EmissionColor", Vector4.zero); }
             }
         }
         public void Front4() { _front.enabled = false; }
@@ -90,22 +93,6 @@ namespace enfutu.UdonScript
             _frame.material = _frmat[num];
         }
 
-
-
-        //Shape----------------------------------------------------------
-        [SerializeField] GameObject[] models;
-        public void Square() { ShapesHide(); models[0].SetActive(true); }
-        public void Pentagon() { ShapesHide(); models[1].SetActive(true); }
-        public void Triangle() { ShapesHide(); models[2].SetActive(true); }
-        public void Circle() { ShapesHide(); models[3].SetActive(true); }
-        public void NoneShape() { ShapesHide(); models[4].SetActive(true); }
-        private void ShapesHide() 
-        {
-            for(int i = 0; i < models.Length; i++)
-            {
-                models[i].SetActive(false);
-            }
-        }
 
         //WaterColor
         [SerializeField] Material _waterMat;

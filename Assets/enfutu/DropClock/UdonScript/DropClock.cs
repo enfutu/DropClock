@@ -74,6 +74,7 @@ namespace enfutu.UdonScript
         {
             _baseTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
             _decorationText = _decorationPlate.GetComponentInChildren<TMP_Text>();
+            _mat.SetFloat("_Exactly", 0);   //定刻の演出を必ずリセットする
 
             generateShaderId();
             initializeArray();
@@ -140,6 +141,8 @@ namespace enfutu.UdonScript
         /// 時計機能
         /// </summary>
         Vector4 handrot = Vector3.zero;
+        float exactly = 0;
+        bool _exactlyMotion = false;
         private void updateClock()
         {
             DateTime now = DateTime.Now;
@@ -158,7 +161,31 @@ namespace enfutu.UdonScript
             handrot.w = 1f;     //PlayModeFlag
 
             _mat.SetVector(_handid, handrot);
+
+            //定時の演出
+            if(minutes <= .1f) { exactly = 1f; _exactlyMotion = true; }
+
+            if (!_exactlyMotion) return;
+
+            if(0 < exactly) 
+            {
+                _mat.SetFloat("_Exactly", exactly);
+                exactly -= .005f;
+            }
+            else
+            {
+                _mat.SetFloat("_Exactly", 0);
+                _exactlyMotion = false;
+            }
         }
+
+        public void TestMinute0()
+        {
+            exactly = 1f;
+            _exactlyMotion = true;
+        }
+
+
 
         float _durationTime = 0;
         private void calcDurationTime()
@@ -500,7 +527,7 @@ namespace enfutu.UdonScript
         /// </summary>
 
         int _blinkCount = 0;
-        bool plateHide = true;
+        bool plateHide = false;
         bool onClick = false;
         int _dragTime = 0;
         public void PointerDownCanvas()
@@ -520,7 +547,7 @@ namespace enfutu.UdonScript
             }
         }
 
-        float plateAlpha = 0f;
+        float plateAlpha = 1f;
         private void platesHideControl()
         {
             if (_blinkCount < 0) return;
