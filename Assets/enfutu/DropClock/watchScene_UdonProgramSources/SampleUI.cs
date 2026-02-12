@@ -81,16 +81,25 @@ namespace enfutu.UdonScript
 
         //FrameColor----------------------------------------------------------
         [SerializeField] MeshRenderer _frame;
+        [SerializeField] MeshRenderer _stand0;
+        [SerializeField] MeshRenderer _stand1;
+        [SerializeField] MeshRenderer _marker;
         [SerializeField] Material[] _frmat;
         public void Frame0() { setFrameMaterial(0); }
         public void Frame1() { setFrameMaterial(1); }
         public void Frame2() { setFrameMaterial(2); }
         public void Frame3() { setFrameMaterial(3); }
-        public void Frame4() { _frame.enabled = false; }
+        public void Frame4() { _frame.enabled = false; _stand0.enabled = false; _stand1.enabled = false; _marker.enabled = false; }
         private void setFrameMaterial(int num)
         {
             _frame.enabled = true;
+            _stand0.enabled = true;
+            _stand1.enabled = true;
+            _marker.enabled = true;
+
             _frame.material = _frmat[num];
+            _stand0.material = _frmat[num];
+            _stand1.material = _frmat[num];
         }
 
 
@@ -159,7 +168,11 @@ namespace enfutu.UdonScript
         //poster
         bool _posterEnable = true;
         [SerializeField] GameObject _poster;
-        public void PosterToggle() { _posterEnable = !_posterEnable; _poster.SetActive(_posterEnable); }
+        public void PosterToggle() 
+        { 
+            _posterEnable = !_posterEnable; 
+            _poster.SetActive(_posterEnable);
+        }
 
         //mirror
         bool _mirrorEnable = true;

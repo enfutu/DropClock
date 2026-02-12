@@ -34,6 +34,11 @@ namespace enfutu.UdonScript
             "주원","소영","태훈","하린","선우"
         };
 
+        string[] lucks = new string[5]
+        {
+            "Amazing", "Great", "Good", "Fair", "Bad"
+        };
+
         [Header("一度に更新出来る上限数(少ないほど軽い)")]
         public int UpdateLimit = 6;
         [Header("触れた水滴が落ちていく速度")]
@@ -63,6 +68,7 @@ namespace enfutu.UdonScript
         //w:0==n→nonActive / -1==n→isActive / 0<n→leftTime　(最悪だ…)
         [UdonSynced(UdonSyncMode.None)] Vector4[] sync_value = new Vector4[100];
         [UdonSynced(UdonSyncMode.None)] string[] _plateText = new string[100];
+        [UdonSynced(UdonSyncMode.None)] int[] _todaysLuck = new int[100];
         [UdonSynced(UdonSyncMode.None)] double _baseTime = 0;
         [UdonSynced(UdonSyncMode.None)] int _playerCount = 0;
 
@@ -110,6 +116,8 @@ namespace enfutu.UdonScript
                 send_value[i] = temp_value[i];
                 initialize_value[i] = send_value[i];
 
+                _todaysLuck[i] = -1;
+
                 GameObject plate = _namePlates[i];
                 plate.GetComponent<nameplate>().MyNum = i;
                 Vector3 pos = new Vector3(rand.x, rand.y, 0f);
@@ -125,6 +133,7 @@ namespace enfutu.UdonScript
             if (!boot) return;
 
             _closeBlit = false;
+            _clicked = false;
 
             platesHideControl();
             updateClock();
@@ -426,7 +435,13 @@ namespace enfutu.UdonScript
                 //_name.text += "</color><br><#0000FF>" + left.Hour + ";" + left.Minute;
                 _name.text += left.Hour.ToString("D2") + ":" + left.Minute.ToString("D2");
             }
-            
+
+            //イースターエッグ
+            if (0 <= _todaysLuck[mynum])
+            {
+                _name.text += "</color><br><#0000FF>[Luck]" + lucks[_todaysLuck[mynum]];
+            }
+
             _name.fontSharedMaterial = materialPresets[1];
             _name.SetMaterialDirty();
             _name.SetVerticesDirty();
@@ -456,14 +471,36 @@ namespace enfutu.UdonScript
             _decorationPlate.SetActive(false);
         }
 
+
+        bool _clicked = false;   //なんか1クリックで3クリック分くらい判定出てて良くないので1度目で止める
+        int _easterEggCount = 0;
+        bool _easterEggEnd = false;
         public void ListeningPointerDown_ActiveMode(int mynum)
         {
-            SendCustomNetworkEvent(NetworkEventTarget.All, "ResetPosition", mynum);
+            if (_clicked) return;
+
+            _clicked = true;
+            int _uranaiNum = -1;
+            if (!_easterEggEnd) //イースターは1回だけ
+            {             
+                //5連続で自分の水滴を移動させたとき、イースターエッグを発火する
+                if ((Networking.LocalPlayer.playerId - 1) == mynum) { _easterEggCount++; }
+                else { _easterEggCount = 0; }
+
+                if (5 <= _easterEggCount)
+                {
+                    //占う
+                    _uranaiNum = UnityEngine.Random.Range(0, 5);
+                    _easterEggEnd = true;
+                }
+            }
+
+            SendCustomNetworkEvent(NetworkEventTarget.All, "ResetPosition", mynum, _uranaiNum);
         }
 
         //重なって触りづらいplateへの対策として位置変更機能
         [NetworkCallable]
-        public void ResetPosition(int num)
+        public void ResetPosition(int num, int easterNum)
         {
             //Resetするplateに触れているなら全員Exitさせる
             if(num == _selectNum)
@@ -478,6 +515,11 @@ namespace enfutu.UdonScript
                 sync_value[num].x = rand.x;
                 sync_value[num].y = rand.y;
 
+                if(0 <= easterNum)
+                {
+                    _todaysLuck[num] = easterNum;
+                }
+
                 RequestSerialization();
             }
         }
@@ -486,7 +528,6 @@ namespace enfutu.UdonScript
         /// 非ActiveなPlateが触れられた場合の処理(ローカル):オーナーへ対象plateのmynumを通知し更新してもらう。更新結果は同期される。
         /// SendValue[mynum].zには予めランダムな値が入っており、この値が水滴のサイズ。
         /// ここに0を入力することでローカルでのみ水滴を見えなく(触れて消える)する。
-        /// 
         /// </summary>
         float def_pitch;
         float def_vol;
@@ -540,11 +581,16 @@ namespace enfutu.UdonScript
         public void PointerUpCanvas()
         {
             onClick = false;
-            if(600 < _dragTime)
-            {
-                ResetValues();
-                _dragTime = 0;
-            }
+
+            if(600 < _dragTime) { ResetValues(); }
+            
+            _dragTime = 0;
+        }
+
+        public void PointerExitCanvas()
+        {
+            onClick = false;
+            _dragTime = 0;
         }
 
         float plateAlpha = 1f;

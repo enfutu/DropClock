@@ -178,6 +178,7 @@ Shader "enfutu/font_Active"
                 float durationTime = _UdonSelectValue.z;
                 float2 selectPos = _UdonPlateValue[selectNum].xy;
 				float isName = input[0].color.r;
+				float isEaster = input[0].color.b;
 
 				uint id = floor(input[1].vid / 4.) + .5;
 
@@ -219,10 +220,8 @@ Shader "enfutu/font_Active"
 					g2f o;
 
 					float2 lv = v.vertex.xy - center;
-					lv *= lerp(nameFontScale * 1.5, nameFontScale, isName);
-					target1.x = (center - selectPos) * selectPower * lerp(1, nameFontScale, isName);
-					//target1 = lerp(target1, Rotate(float2(-.2 * nameFontScale, 0), -.3 * id - _Time.y * .1), isName);
-
+					lv *= lerp(nameFontScale * 1.5, nameFontScale, saturate(isName + isEaster));
+					target1.x = (center - selectPos) * selectPower * lerp(1, nameFontScale, saturate(isName + isEaster));
 
 					float2 pos = p0;// + vec;
 					pos += target0;				
@@ -230,6 +229,7 @@ Shader "enfutu/font_Active"
 					pos += lv * tex.b * 20;
 
 					pos.y += lerp(0, .05, isName);
+					pos.y -= lerp(0, .05, isEaster);
 					pos.y += sin(_Time.y + id * .5) * .005;
 
 					v.vertex.xy = pos;
