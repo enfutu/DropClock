@@ -36,7 +36,7 @@ namespace enfutu.UdonScript
 
         string[] lucks = new string[5]
         {
-            "Amazing", "Great", "Good", "Fair", "Bad"
+            "Wonderful Day", "Lucky Day", "Normal Day", "Unlucky Day", "Bad Day"
         };
 
         [Header("一度に更新出来る上限数(少ないほど軽い)")]
@@ -235,7 +235,8 @@ namespace enfutu.UdonScript
             int id = pid - 1;
             _plateText[id] = name;
 
-            _plateText[id] = _plateText[id] + "[" + pid + "]";
+            //_plateText[id] = _plateText[id] + "[" + pid + "]";
+            _plateText[id] = _plateText[id] + " ";
             GameObject plate = _namePlates[id];
 
             Vector2 rand = UnityEngine.Random.insideUnitCircle * circleRange;
@@ -439,7 +440,7 @@ namespace enfutu.UdonScript
             //イースターエッグ
             if (0 <= _todaysLuck[mynum])
             {
-                _name.text += "</color><br><#0000FF>[Luck]" + lucks[_todaysLuck[mynum]];
+                _name.text += "</color><br><#0000FF>" + lucks[_todaysLuck[mynum]];
             }
 
             _name.fontSharedMaterial = materialPresets[1];

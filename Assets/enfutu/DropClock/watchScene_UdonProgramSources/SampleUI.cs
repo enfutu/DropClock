@@ -12,9 +12,40 @@ namespace enfutu.UdonScript
     public class SampleUI : UdonSharpBehaviour
     {
         [SerializeField] DropClock _sc;
+        [SerializeField] Animator _anim;
+
+        //Select
+        [SerializeField] Color32[] _selectCol;
+        [SerializeField] Image[] styleImage;
+        [SerializeField] Image[] sampleColorImage;
+        [SerializeField] Image[] frameImage;
+
+        //Colors
+        [SerializeField] Color32[] _MainColor;
+        [SerializeField] Color32[] _SubColor;
+        [SerializeField] Color32[] _FontColor;
+
+        [SerializeField] Material[] _FrontMat;
+        [SerializeField] Material[] _BackMat;
+        [SerializeField] Material[] _FrameMat;
+        [SerializeField] Material[] _fontMat;
+        [SerializeField] Material nullMat;
+
+        //Parts
+        [SerializeField] MeshRenderer back;
+        [SerializeField] MeshRenderer frame;
+        [SerializeField] MeshRenderer front;
+        [SerializeField] MeshRenderer marker;
+        [SerializeField] MeshRenderer stand_frame;
+        [SerializeField] MeshRenderer stand_noFrame;
 
         void Start()
         {
+            Style_Wall();
+            Frame_Enable();
+            Col0();
+
+            /*
             Front0();
             Frame2();
             Back0();
@@ -27,6 +58,7 @@ namespace enfutu.UdonScript
             WallChange();
             PosterToggle();
             MirrorToggle();
+            */
         }
 
         //TestPlay----------------------------------------------------------
@@ -41,6 +73,205 @@ namespace enfutu.UdonScript
             _sc.TestPlayEnter(_useCount);
         }
 
+        //Style----------------------------------------------------------
+        int style = 0;
+        public void Style_Wall()
+        {
+            style = 0;
+            _anim.SetTrigger("Wall");
+
+            wallNum = 0;
+            WallSwitch();
+
+            _posterEnable = false;
+            PosterToggle();
+
+            _mirrorEnable = false;
+            MirrorToggle();
+            SelectCol_Style();
+            ScaleChange();
+        }
+
+        public void Style_Desk()
+        {
+            style = 1;
+            _anim.SetTrigger("Desk");
+
+            _mirrorEnable = false;
+            MirrorToggle();
+            SelectCol_Style();
+            ScaleChange();
+        }
+
+        public void Style_Mirror()
+        {
+            style = 2;
+            _anim.SetTrigger("Mirror");
+
+            wallNum = 1;
+            WallSwitch();
+
+            _posterEnable = false;
+            PosterToggle();
+
+            _mirrorEnable = false;
+            MirrorToggle();
+            SelectCol_Style();
+            ScaleChange();
+        }
+
+        public void SelectCol_Style()
+        {
+            for(int i = 0; i < styleImage.Length; i++)
+            {
+                if(i == style) { styleImage[i].color = _selectCol[0]; }
+                else { styleImage[i].color = _selectCol[1]; }
+            }
+        }
+
+        //Frame----------------------------------------------------------
+        public void Frame_Enable()
+        {
+            frame.enabled = true; stand_frame.enabled = true; stand_noFrame.enabled = false;
+            frameImage[0].color = _selectCol[0]; frameImage[1].color = _selectCol[1];
+        }
+
+        public void Frame_Disable()
+        {
+            frame.enabled = false; stand_frame.enabled = false; stand_noFrame.enabled = true;
+            frameImage[0].color = _selectCol[1]; frameImage[1].color = _selectCol[0];
+        }
+
+        //Switch----------------------------------------------------------
+        bool _mirrorEnable = true;
+        [SerializeField] GameObject _mirror;
+        public void MirrorToggle() 
+        {
+            _mirror.SetActive(_mirrorEnable);
+            _mirrorEnable = !_mirrorEnable;       
+        }
+
+        //wall
+        [SerializeField] Material[] wallMats;
+        [SerializeField] MeshRenderer _wall;
+        int wallNum = 0;
+        public void WallSwitch()
+        {
+            _wall.material = wallMats[wallNum];
+            if(wallNum < 2) { wallNum++; }
+            else { wallNum = 0; }
+        }
+
+        //poster
+        bool _posterEnable = true;
+        [SerializeField] GameObject _poster;
+        public void PosterToggle()
+        {
+            _poster.SetActive(_posterEnable);
+            _posterEnable = !_posterEnable;
+        }
+
+        //Pattern----------------------------------------------------------
+
+        int colnum = 0;
+        public void Col0()
+        {
+            colnum = 0;
+            SelectCol_Col();
+            SetMaterials();
+        }
+
+        public void Col1()
+        {
+            colnum = 1;
+            SelectCol_Col();
+            SetMaterials();
+        }
+
+        public void Col2()
+        {
+            colnum = 2;
+            SelectCol_Col();
+            SetMaterials();
+        }
+
+        public void Col3()
+        {
+            colnum = 3;
+            SelectCol_Col();
+            SetMaterials();
+        }
+
+        public void Col4()
+        {
+            colnum = 4;
+            SelectCol_Col();
+            SetMaterials();
+        }
+
+        public void Col5()
+        {
+            colnum = 5;
+            SelectCol_Col();
+            SetMaterials();
+        }
+
+        public void Col6()
+        {
+            colnum = 6;
+            SelectCol_Col();
+            SetMaterials();
+        }
+
+        [SerializeField] RectTransform[] _colsRect;
+        [SerializeField] RectTransform _selectImage;
+        public void SelectCol_Col()
+        {
+            Vector3 pos = new Vector3(_colsRect[colnum].position.x, _selectImage.position.y, _selectImage.position.z);
+            _selectImage.position = pos;
+        }
+
+        [SerializeField] Material _waterMat;
+        [SerializeField] GameObject _nameplateRoot;
+        public void SetMaterials()
+        {
+            front.material = _FrontMat[colnum];
+            back.material = _BackMat[colnum];
+            frame.material = _FrameMat[colnum];
+            marker.material = _FrameMat[colnum];
+            stand_frame.material = _FrameMat[colnum];
+            stand_noFrame.material = _FrameMat[colnum];
+
+            _waterMat.SetColor("_WaterColor", _MainColor[colnum]);
+            _waterMat.SetColor("_HandsColor", _SubColor[colnum]);
+
+            for (int i = 0; i < _fontMat.Length; i++)
+            {
+                _fontMat[i].SetColor("_FaceColor", _FontColor[colnum]);
+            }
+            _nameplateRoot.SetActive(false);
+            _nameplateRoot.SetActive(true);
+        }
+
+        //Scale
+        [SerializeField] Transform dropClock;
+        [SerializeField] Slider _scaleSlider;
+        public void ScaleChange()
+        {
+            if(style == 1) 
+            {
+                _scaleSlider.interactable = false;
+                dropClock.localScale = Vector3.one; 
+                return;
+            }
+
+            _scaleSlider.interactable = true;
+            float v = Mathf.Lerp(.5f, 1.8f, _scaleSlider.value);
+            Vector3 scale = new Vector3(v, v, 1f); 
+            dropClock.localScale = scale;
+        }
+
+        /*
         //FrontColor----------------------------------------------------------
         [SerializeField] MeshRenderer _front;
         [SerializeField] Vector4[] _emissionColor;
@@ -142,8 +373,7 @@ namespace enfutu.UdonScript
                 _fontMat[i].SetColor("_FaceColor", _fontColor[num]);
             }
 
-            _nameplateRoot.SetActive(false);
-            _nameplateRoot.SetActive(true);
+
         }
 
         //Scale
@@ -178,5 +408,7 @@ namespace enfutu.UdonScript
         bool _mirrorEnable = true;
         [SerializeField] GameObject _mirror;
         public void MirrorToggle() { _mirrorEnable = !_mirrorEnable; _mirror.SetActive(_mirrorEnable); }
+
+        */
     }
 }
